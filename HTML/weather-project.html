@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.1/mapbox-gl.css' rel='stylesheet'/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/weather-map.css">
+
+</head>
+<body class="">
+
+<<nav class="navbar navbar-expand-lg navbar-light nav-color">
+    <a class="navbar-brand" href="#">Weather Tracker</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto topnav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Weather Warnings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" <input type="text">
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Meet the Meteorologist </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Resources
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Report Weather</a>
+            </li>
+            <li class="nav-item d-flex">
+                <input class=" text-black lt-auto p-2"  href="#"  data-target="#myModal" placeholder="Weather Finder"></>
+            </li>
+        </ul>
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Customer Sign In</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        <label class="sr-only" for="usrname">Username</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+
+                        <label class="sr-only" for="Password">Name</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-key"></i></span>
+                            </div>
+                            <input id="Password" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" >Sign In</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</nav>
+
+<div class="container cards d-flex gx-1"></div>
+<hr style="height:20px;border-width:0;color:gray;background-color:gray">
+<div class="position-relative">
+<div class="col-1-auto">
+<div id="map"></div>
+</div>
+</divposition-relative>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+<script src="/JS/jquery-2.2.4.js"></script>
+<script src="/JS/keys.js"></script>
+<script>
+   // How I request the map from the mapbox API
+    mapboxgl.accessToken = MAPBOX_KEY;
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v9',
+        zoom: 10,
+        center: [-97.3308, 32.7555]
+    });
+
+
+
+    // Map marker token
+    $('#map').click(function(){
+
+    })
+    var weatherMarker = new mapboxgl.Marker({draggable: true})
+        .setLngLat([-97.3308, 32.7555])
+        .addTo(map);
+
+    //Search functionality via click function
+
+    $('#findIt').click(function() {
+        var citySearch = $('#search').val()
+        geocode(citySearch, MAPBOX_KEY).then(function(result){
+            console.log(result)
+            map.setCenter(result);
+            map.setZoom(20);
+            getWeather(result[0], result[1])
+            weatherMarker.setLngLat(result)
+            console.log(reverseGeocode(result[0],result[1]))
+
+        })
+    });
+
+    // This function gets the weather for each day'
+   // Display the 5 day forecast
+    function getWeather(lng, lat) {
+        $.get('https://api.openweathermap.org/data/2.5/onecall', {
+            appid: OPEN_WEATHER_APPID,
+            lat: lat,
+            lon: lng,
+            units: 'imperial',
+            exclude: 'minutely,alerts,hourly',
+        }).done(function (data) {
+            console.log(data)
+            //applying the weather data to the cards
+            $('.cards').html('')
+            for (var i = 0; i < data.daily.length -3; i++) {
+                var thisDate = new Date(data.daily[i].dt * 1000)
+                console.log(thisDate)
+                console.log(thisDate.toUTCString())
+                $('.cards').append('<div class="card d-flex flex-grow-1 p-2 flex-wrap-nowrap mx-2 fill">' +
+                    '<h5>' + thisDate + '</h5>' +
+                    '<p class="title">Humidity: ' + data.daily[i].humidity + '</p>' +
+                    '<p>Clouds: ' + data.daily[i].weather[0].description + '</p>' +
+                    '<p>Pressure: ' + data.daily[i].pressure + '</p>' +
+                    '<p>Temperature ' + data.daily[i].temp.min + '°F / ' + data.daily[i].temp.max + '°F</p>' +
+                    '</div>');
+            }
+        });
+    }
+// create new information when the marker is drug
+    // weatherMarker.on('dragend', function() {
+    //     var newSpot = weatherMarker.getLngLat()
+    //     getWeather(newSpot.lng, newSpot.lat)
+    //
+    // })
+
+
+    getWeather(-97.3308, 32.7555)
+
+
+   // $('title').css('font-weight', 'bold');
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#map{
+    width: 900px;
+    height: 900px;
+}
+.fill {
+    color: black;
+    background-color: lightblue;
+    border: 5px solid gray;
+}
+h1{
+    font-size: 100px;
+}
+
+.nav-color{
+background-color: lightgrey;
+}
+
+/*.line-color{*/
+/*    color: pink;*/
+/*}*/
