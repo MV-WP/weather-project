@@ -89,6 +89,7 @@
     </div>
 
 
+
 </nav>
 
 <div class="container cards d-flex gx-1"></div>
@@ -111,12 +112,12 @@
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v9',
         zoom: 10,
-        center: [-97.3308, 32.7555]
+        center: [-97.3308, 32.7555] //coordinated to fort Worth
     });
 
 
 
-    // Map marker token
+    // Map marker
     $('#map').click(function(){
 
     })
@@ -166,18 +167,11 @@
             }
         });
     }
-// create new information when the marker is drug
-    // weatherMarker.on('dragend', function() {
-    //     var newSpot = weatherMarker.getLngLat()
-    //     getWeather(newSpot.lng, newSpot.lat)
-    //
-    // })
+
 
 
     getWeather(-97.3308, 32.7555)
 
-
-   // $('title').css('font-weight', 'bold');
 
 </script>
 
